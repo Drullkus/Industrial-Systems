@@ -10,7 +10,7 @@ import net.minecraftforge.client.model.ISmartItemModel;
 
 import java.util.List;
 
-public class RFWrappedTool implements ISmartItemModel
+public class RFWrappedToolRender implements ISmartItemModel
 {
 	@Override
 	public IBakedModel handleItemState(ItemStack stack)
