@@ -1,0 +1,123 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'org.ajoberstar:gradle-git:0.10.1'
+    }
+}
+
+plugins {
+    id 'net.franz-becker.gradle-lombok' version '1.5'
+	id 'com.matthewprenger.cursegradle' version '1.0.5'
+}
+
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle.forge'
+idea.module.inheritOutputDirs = true
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/mainOld/java'
+      srcDir 'src/gameanalytics'
+    }
+    resources {
+      srcDir 'src/mainOld/resources'
+    }
+  }
+}
+
+idea {
+  module.inheritOutputDirs = true
+}
+
+repositories {
+    maven { // WAILA
+		url "http://mobiusstrip.eu/maven"
+	}
+	maven { // JEI
+		url "http://dvs1.progwml6.com/files/maven"
+	}
+}
+
+dependencies {
+    deobfCompile "mcp.mobius.waila:Waila:${waila_version}"
+	deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
+}
+
+lombok {
+    version = "1.16.6"
+    sha256 = "e0a471be03e1e6b02bf019480cec7a3ac9801702bf7bf62f15d077ad4df8dd5d"
+}
+
+import net.franz_becker.gradle.lombok.task.DelombokTask
+
+task delombok(type: DelombokTask) {
+    args("src/mainOld/java", "-d", "build/sources/delomboked/java")
+}
+
+tasks.eclipse.dependsOn installLombok
+
+if (System.env.BUILD_NUMBER != null) mod_version = "$mod_version.$System.env.BUILD_NUMBER"
+
+group = 'us.drullk.IndustrialSystems'
+version = "$minecraft_version-$mod_version"
+archivesBaseName = "Industrial Systems"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+minecraft {
+    runDir = "runtime/client/assets"
+    version = "$minecraft_version-$forge_version"
+    mappings = "snapshot_20160119"
+}
+
+processResources {
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+artifacts {
+    archives sourceJar, deobfJar
+}
+
+curseforge {
+    apiKey=System.env.CURSE_API_KEY != null ? "$System.env.CURSE_API_KEY" : ''
+    project {
+      id='232683'
+      changelog="https://github.com/Lordmau5/FFS/compare/$System.env.GIT_PREVIOUS_COMMIT...$System.env.GIT_COMMIT"
+      releaseType='alpha'
+      mainArtifact(jar) {
+        displayName="FFS v$project.mod_version"
+      }
+      addArtifact deobfJar
+    }
+}
+
+idea { module { inheritOutputDirs = true } }
