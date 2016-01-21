@@ -70,7 +70,7 @@ tasks.eclipse.dependsOn installLombok
 
 if (System.env.BUILD_NUMBER != null) mod_version = "$mod_version.$System.env.BUILD_NUMBER"
 
-group = 'us.drullk.IndustrialSystems'
+group = 'us.drullkus.industrialsystems'
 version = "$minecraft_version-$mod_version"
 archivesBaseName = "Industrial Systems"
 

@@ -1,4 +1,4 @@
-package us.drullk.IndustrialSystems;
+package us.drullkus.industrialsystems;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -7,10 +7,10 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import us.drullk.IndustrialSystems.Crafting.ISCrafting;
-import us.drullk.IndustrialSystems.Item.ISItems;
-import us.drullk.IndustrialSystems.Proxy.CommonProxy;
-import us.drullk.IndustrialSystems.Utils.Properties;
+import us.drullkus.industrialsystems.crafting.ISCrafting;
+import us.drullkus.industrialsystems.item.ISItems;
+import us.drullkus.industrialsystems.proxy.CommonProxy;
+import us.drullkus.industrialsystems.utils.Properties;
 
 @Mod(modid = Properties.MOD_ID, version = Properties.VERSION, name = Properties.MOD_NAME)
 public class IndustrialSystems implements Properties

@@ -1,4 +1,4 @@
-package us.drullk.IndustrialSystems.Crafting;
+package us.drullkus.industrialsystems.crafting;
 
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.inventory.InventoryCrafting;
@@ -8,8 +8,8 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import us.drullk.IndustrialSystems.Item.ISItems;
-import us.drullk.IndustrialSystems.Item.ItemRFTool;
+import us.drullkus.industrialsystems.item.ISItems;
+import us.drullkus.industrialsystems.item.ItemRFTool;
 
 public class RFToolWrapperRecipe implements IRecipe
 {

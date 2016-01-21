@@ -1,4 +1,4 @@
-package us.drullk.IndustrialSystems.Rendering;
+package us.drullkus.industrialsystems.rendering;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

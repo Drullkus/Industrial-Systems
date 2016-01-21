@@ -1,4 +1,4 @@
-package us.drullk.IndustrialSystems.Item;
+package us.drullkus.industrialsystems.item;
 
 import net.minecraft.item.Item;
 
