@@ -1,11 +1,11 @@
-package us.drullkus.industrialsystems.item;
+package us.drullk.industrialsystems.item;
 
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import us.drullkus.industrialsystems.item.Wrapper.ItemWrapper;
+import us.drullk.industrialsystems.item.Wrapper.ItemWrapper;
 
 public class ItemRFTool extends ItemWrapper implements IEnergyContainerItem
 {

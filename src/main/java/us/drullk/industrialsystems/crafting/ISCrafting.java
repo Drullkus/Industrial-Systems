@@ -1,4 +1,4 @@
-package us.drullkus.industrialsystems.crafting;
+package us.drullk.industrialsystems.crafting;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 

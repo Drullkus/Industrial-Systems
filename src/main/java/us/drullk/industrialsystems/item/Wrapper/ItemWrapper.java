@@ -1,4 +1,4 @@
-package us.drullkus.industrialsystems.item.Wrapper;
+package us.drullk.industrialsystems.item.Wrapper;
 
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;

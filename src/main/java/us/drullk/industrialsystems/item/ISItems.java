@@ -1,4 +1,4 @@
-package us.drullkus.industrialsystems.item;
+package us.drullk.industrialsystems.item;
 
 import net.minecraft.init.Items;
 import net.minecraftforge.fml.common.registry.GameRegistry;

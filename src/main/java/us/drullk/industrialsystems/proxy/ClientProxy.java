@@ -1,4 +1,4 @@
-package us.drullkus.industrialsystems.proxy;
+package us.drullk.industrialsystems.proxy;
 
 public class ClientProxy extends CommonProxy
 {}
