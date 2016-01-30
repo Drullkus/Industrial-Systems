@@ -14,6 +14,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import us.drullk.industrialsystems.IndustrialSystems;
 
 import java.util.List;
 import java.util.Random;
@@ -41,6 +42,10 @@ public class ItemWrapper extends Item
 
 			unwrappedStack = unloadStackFromWrappedNBT(tagComp);
 		}
+		else
+		{
+			IndustrialSystems.logger.info("There was a problem with unwrapping ItemStack!");
+		}
 
 		return unwrappedStack;
 	}
@@ -51,13 +56,30 @@ public class ItemWrapper extends Item
 
 		NBTTagCompound wrappedCompound = tagList.getCompoundTagAt(0);
 
+		if(wrappedCompound == null)
+		{
+			IndustrialSystems.logger.info("Wrapped compound is null! :(");
+
+			return null;
+		}
 
 		return wrappedCompound;
 	}
 
 	public ItemStack unloadStackFromWrappedNBT(NBTTagCompound tagComp)
 	{
-		return ItemStack.loadItemStackFromNBT(unwrapThisNBTComp(tagComp));
+		ItemStack unwrappedStack = ItemStack.loadItemStackFromNBT(unwrapThisNBTComp(tagComp));
+
+		if(unwrappedStack == null)
+		{
+			IndustrialSystems.logger.info("There was a problem unwrapping stack from NBT!");
+		}
+		else
+		{
+			IndustrialSystems.logger.info("Got ItemStack containing Item " + unwrappedStack.getItem().getUnlocalizedName(unwrappedStack) + " from NBT!");
+		}
+
+		return unwrappedStack;
 	}
 
 	@Override
