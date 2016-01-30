@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import us.drullk.industrialsystems.block.ISBlocks;
 import us.drullk.industrialsystems.crafting.ISCrafting;
 import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.proxy.CommonProxy;
@@ -26,6 +27,7 @@ public class IndustrialSystems implements Properties
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		ISBlocks.preInit();
 		ISItems.preInit();
 		ISCrafting.preInit();
 	}
@@ -33,6 +35,7 @@ public class IndustrialSystems implements Properties
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		ISBlocks.init();
 		ISItems.init();
 		ISCrafting.init();
 	}
@@ -40,6 +43,7 @@ public class IndustrialSystems implements Properties
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		ISBlocks.postInit();
 		ISItems.postInit();
 		ISCrafting.postInit();
 	}
