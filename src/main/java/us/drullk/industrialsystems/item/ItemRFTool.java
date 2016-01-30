@@ -11,13 +11,15 @@ public class ItemRFTool extends ItemWrapper implements IEnergyContainerItem
 {
 	public ItemRFTool(Item item)
 	{
+		super(item);
+
 		if(item != null && item instanceof ItemPickaxe)
 		{
-			wrappedItem = item;
+			fallbackItem = item;
 		}
 		else
 		{
-			wrappedItem = Items.iron_pickaxe;
+			fallbackItem = Items.diamond_pickaxe;
 		}
 	}
 

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.item.ItemRFTool;
@@ -73,7 +74,17 @@ public class RFToolWrapperRecipe implements IRecipe
 	{
 		NBTTagCompound tagCompound = new NBTTagCompound();
 
+		ItemStack tool = inv.getStackInSlot(5);
 
+		tagCompound = tool.getTagCompound(); //TODO Write a real new itemstack, this is hacky
+
+		NBTTagList tagList = new NBTTagList();
+		NBTTagCompound wrappingCompound = new NBTTagCompound();
+
+		tool.writeToNBT(wrappingCompound);
+		tagList.appendTag(wrappingCompound);
+
+		tagCompound.setTag("wrappedStack", tagList);
 
 		return new ItemStack(ISItems.pickaxeRF, 1, 0, tagCompound);
 	}

@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,276 +20,368 @@ import java.util.Random;
 
 public class ItemWrapper extends Item
 {
-	public Item wrappedItem;
+	//TODO: Add warning labels
 
-	public ItemWrapper()
+	@Deprecated
+	public Item fallbackItem;
+
+	public ItemWrapper(Item defaultItem)
 	{
+		fallbackItem = defaultItem;
 		this.setMaxStackSize(1);
+	}
+
+	public ItemStack unwrapThisItemStack(ItemStack wrappedStack)
+	{
+		ItemStack unwrappedStack = null;
+
+		if(wrappedStack != null && wrappedStack.getItem() instanceof ItemWrapper)
+		{
+			NBTTagCompound tagComp = wrappedStack.getTagCompound();
+
+			unwrappedStack = unloadStackFromWrappedNBT(tagComp);
+		}
+
+		return unwrappedStack;
+	}
+
+	public NBTTagCompound unwrapThisNBTComp(NBTTagCompound tagComp)
+	{
+		NBTTagList tagList = tagComp.getTagList("wrappedStack", 9);
+
+		NBTTagCompound wrappedCompound = tagList.getCompoundTagAt(0);
+
+
+		return wrappedCompound;
+	}
+
+	public ItemStack unloadStackFromWrappedNBT(NBTTagCompound tagComp)
+	{
+		return ItemStack.loadItemStackFromNBT(unwrapThisNBTComp(tagComp));
 	}
 
 	@Override
 	public boolean updateItemStackNBT(NBTTagCompound nbt)
 	{
-		return wrappedItem.updateItemStackNBT(nbt);
+		ItemStack unwrappedStack = unloadStackFromWrappedNBT(nbt);
+		boolean result;
+
+		result = unwrappedStack.getItem().updateItemStackNBT(unwrappedStack.getTagCompound());
+
+		return result;
 	}
 
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		return wrappedItem.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().onItemUse(unwrappedStack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
 	{
-		return wrappedItem.onItemRightClick(itemStackIn, worldIn, playerIn);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStackIn);
+
+		return unwrappedStack.getItem().onItemRightClick(unwrappedStack, worldIn, playerIn);
 	}
 
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
-		return wrappedItem.onItemUseFinish(stack, worldIn, playerIn);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public int getMetadata(int damage)
-	{
-		return wrappedItem.getMetadata(damage);
-	}
-
-	@Override
-	public boolean getHasSubtypes()
-	{
-		return wrappedItem.getHasSubtypes();
-	}
-
-	@Override
-	public int getMaxDamage()
-	{
-		return wrappedItem.getMaxDamage();
-	}
-
-	@Override
-	public boolean isDamageable()
-	{
-		return wrappedItem.isDamageable();
+		return unwrappedStack.getItem().onItemUseFinish(unwrappedStack, worldIn, playerIn);
 	}
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
-		return wrappedItem.hitEntity(stack, target, attacker);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().hitEntity(unwrappedStack, target, attacker);
 	}
 
 	@Override
 	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)
 	{
-		return wrappedItem.onBlockDestroyed(stack, worldIn, blockIn, pos, playerIn);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public boolean canHarvestBlock(Block blockIn)
-	{
-		return wrappedItem.canHarvestBlock(blockIn);
+		return unwrappedStack.getItem().onBlockDestroyed(unwrappedStack, worldIn, blockIn, pos, playerIn);
 	}
 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target)
 	{
-		return wrappedItem.itemInteractionForEntity(stack, playerIn, target);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean isFull3D()
-	{
-		return wrappedItem.isFull3D();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean shouldRotateAroundWhenRendering()
-	{
-		return wrappedItem.shouldRotateAroundWhenRendering();
+		return unwrappedStack.getItem().itemInteractionForEntity(unwrappedStack, playerIn, target);
 	}
 
 	@Override
 	public String getUnlocalizedNameInefficiently(ItemStack stack)
 	{
-		return wrappedItem.getUnlocalizedNameInefficiently(stack);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public String getUnlocalizedName()
-	{
-		return wrappedItem.getUnlocalizedName();
+		return unwrappedStack.getItem().getUnlocalizedNameInefficiently(unwrappedStack);
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return wrappedItem.getUnlocalizedName(stack);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public boolean getShareTag()
-	{
-		return wrappedItem.getShareTag();
-	}
-
-	@Override
-	public Item getContainerItem()
-	{
-		return wrappedItem.getContainerItem();
-	}
-
-	@Override
-	public boolean hasContainerItem()
-	{
-		return wrappedItem.hasContainerItem();
+		return unwrappedStack.getItem().getUnlocalizedName(unwrappedStack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int renderPass)
 	{
-		return wrappedItem.getColorFromItemStack(stack, renderPass);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getColorFromItemStack(unwrappedStack, renderPass);
 	}
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		wrappedItem.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		unwrappedStack.getItem().onUpdate(unwrappedStack, worldIn, entityIn, itemSlot, isSelected);
 	}
 
 	@Override
 	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
 	{
-		wrappedItem.onCreated(stack, worldIn, playerIn);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public boolean isMap()
-	{
-		return wrappedItem.isMap();
+		unwrappedStack.getItem().onCreated(unwrappedStack, worldIn, playerIn);
 	}
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
 	{
-		return wrappedItem.getItemUseAction(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getItemUseAction(unwrappedStack);
 	}
 
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
 	{
-		return wrappedItem.getMaxItemUseDuration(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getMaxItemUseDuration(unwrappedStack);
 	}
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityPlayer playerIn, int timeLeft)
 	{
-		wrappedItem.onPlayerStoppedUsing(stack, worldIn, playerIn, timeLeft);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-	@Override
-	public Item setPotionEffect(String potionEffect)
-	{
-		return wrappedItem.setPotionEffect(potionEffect);
+		unwrappedStack.getItem().onPlayerStoppedUsing(unwrappedStack, worldIn, playerIn, timeLeft);
 	}
 
 	@Override
 	public String getPotionEffect(ItemStack stack)
 	{
-		return wrappedItem.getPotionEffect(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getPotionEffect(unwrappedStack);
 	}
 
 	@Override
 	public boolean isPotionIngredient(ItemStack stack)
 	{
-		return wrappedItem.isPotionIngredient(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().isPotionIngredient(unwrappedStack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
 	{
-		wrappedItem.addInformation(stack, playerIn, tooltip, advanced);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		unwrappedStack.getItem().addInformation(unwrappedStack, playerIn, tooltip, advanced);
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
-		return wrappedItem.getItemStackDisplayName(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getItemStackDisplayName(unwrappedStack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack)
 	{
-		return wrappedItem.hasEffect(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().hasEffect(unwrappedStack);
 	}
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack)
 	{
-		return wrappedItem.getRarity(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getRarity(unwrappedStack);
 	}
 
 	@Override
 	public boolean isItemTool(ItemStack stack)
 	{
-		return wrappedItem.isItemTool(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().isItemTool(unwrappedStack);
 	}
 
 	/*@Override
 	protected MovingObjectPosition getMovingObjectPositionFromPlayer(World worldIn, EntityPlayer playerIn, boolean useLiquids)
 	{
-		return wrappedItem.getMovingObjectPositionFromPlayer(worldIn, playerIn, useLiquids);
+		return fallbackItem.getMovingObjectPositionFromPlayer(worldIn, playerIn, useLiquids);
 	}//*/
-
-	@Override
-	public int getItemEnchantability()
-	{
-		return wrappedItem.getItemEnchantability();
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		wrappedItem.getSubItems(itemIn, tab, subItems);
+		itemIn.getSubItems(itemIn, tab, subItems);
+	}
+
+	@Override
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+	{
+		// TODO: Fuss with unwrapping then rewrapping
+
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isFull3D()
+	{
+		return fallbackItem.isFull3D();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean shouldRotateAroundWhenRendering()
+	{
+		return fallbackItem.shouldRotateAroundWhenRendering();
+	}
+
+	@Override
+	public int getMetadata(int damage)
+	{
+		// Can't do much here :/
+
+		return fallbackItem.getMetadata(damage);
+	}
+
+	@Override
+	public boolean getHasSubtypes()
+	{
+		// Can't do much here :/
+
+		return fallbackItem.getHasSubtypes();
+	}
+
+	@Override
+	public int getMaxDamage()
+	{
+		//TODO: RF "Damage" Bar
+		return fallbackItem.getMaxDamage();
+	}
+
+	@Override
+	public boolean isDamageable()
+	{
+		//TODO: RF "Damage" Bar
+		return fallbackItem.isDamageable();
+	}
+
+	@Override
+	public boolean canHarvestBlock(Block blockIn)
+	{
+		// Can't do much here :/
+
+		return fallbackItem.canHarvestBlock(blockIn);
+	}
+
+	@Override
+	public boolean getShareTag()
+	{
+		return fallbackItem.getShareTag();
+	}
+
+	@Override
+	public Item getContainerItem()
+	{
+		return fallbackItem.getContainerItem();
+	}
+
+	@Override
+	public boolean hasContainerItem()
+	{
+		return fallbackItem.hasContainerItem();
+	}
+
+	@Override
+	public boolean isMap()
+	{
+		return fallbackItem.isMap();
+	}
+
+	@Override
+	public String getUnlocalizedName()
+	{
+		return fallbackItem.getUnlocalizedName();
+	}
+
+	@Override
+	public Item setPotionEffect(String potionEffect)
+	{
+		// Can't do much
+
+		return fallbackItem.setPotionEffect(potionEffect);
+	}
+
+	@Override
+	public int getItemEnchantability()
+	{
+		return fallbackItem.getItemEnchantability();
 	}
 
 	@Override
 	public Item setCreativeTab(CreativeTabs tab)
 	{
-		return wrappedItem.setCreativeTab(tab);
+		return fallbackItem.setCreativeTab(tab);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public CreativeTabs getCreativeTab()
 	{
-		return wrappedItem.getCreativeTab();
+		return fallbackItem.getCreativeTab();
 	}
 
 	@Override
 	public boolean canItemEditBlocks()
 	{
-		return wrappedItem.canItemEditBlocks();
-	}
-
-	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
-	{
-		return wrappedItem.getIsRepairable(toRepair, repair);
+		return fallbackItem.canItemEditBlocks();
 	}
 
 	@Override
 	public Multimap<String, AttributeModifier> getItemAttributeModifiers()
 	{
-		return wrappedItem.getItemAttributeModifiers();
+		return fallbackItem.getItemAttributeModifiers();
 	}
 
 	// Overridden Forge Methods
@@ -296,275 +389,370 @@ public class ItemWrapper extends Item
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(ItemStack stack)
 	{
-		return wrappedItem.getAttributeModifiers(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getAttributeModifiers(unwrappedStack);
 	}
 
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
 	{
-		return wrappedItem.onDroppedByPlayer(item, player);
+		ItemStack unwrappedStack = unwrapThisItemStack(item);
+
+		return unwrappedStack.getItem().onDroppedByPlayer(unwrappedStack, player);
 	}
 
 	@Override
 	public String getHighlightTip( ItemStack item, String displayName )
 	{
-		return wrappedItem.getHighlightTip(item, displayName);
+		ItemStack unwrappedStack = unwrapThisItemStack(item);
+
+		return unwrappedStack.getItem().getHighlightTip(unwrappedStack, displayName);
 	}
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		return wrappedItem.onItemUseFirst(stack, player, world, pos, side, hitX, hitY, hitZ);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().onItemUseFirst(unwrappedStack, player, world, pos, side, hitX, hitY, hitZ);
 	}
 
 	@Override
 	public float getDigSpeed(ItemStack itemstack, net.minecraft.block.state.IBlockState state)
 	{
-		return wrappedItem.getDigSpeed(itemstack, state);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(itemstack);
 
-	@Override
-	public boolean isRepairable()
-	{
-		return wrappedItem.isRepairable();
-	}
-
-	@Override
-	public Item setNoRepair()
-	{
-		return wrappedItem.setNoRepair();
+		return unwrappedStack.getItem().getDigSpeed(unwrappedStack, state);
 	}
 
 	@Override
 	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player)
 	{
-		return wrappedItem.onBlockStartBreak(itemstack, pos, player);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemstack);
+
+		return unwrappedStack.getItem().onBlockStartBreak(unwrappedStack, pos, player);
 	}
 
 	@Override
 	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
 	{
-		wrappedItem.onUsingTick(stack, player, count);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		unwrappedStack.getItem().onUsingTick(unwrappedStack, player, count);
 	}
 
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		return wrappedItem.onLeftClickEntity(stack, player, entity);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().onLeftClickEntity(unwrappedStack, player, entity);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.resources.model.ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
-		return wrappedItem.getModel(stack, player, useRemaining);
+		//TODO: Hm!
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getModel(unwrappedStack, player, useRemaining);
 	}
 
 	@Override
 	public ItemStack getContainerItem(ItemStack itemStack)
 	{
-		return wrappedItem.getContainerItem(itemStack);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
+
+		return unwrappedStack.getItem().getContainerItem(unwrappedStack);
 	}
 
 	@Override
 	public boolean hasContainerItem(ItemStack stack)
 	{
-		return wrappedItem.hasContainerItem(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().hasContainerItem(unwrappedStack);
 	}
 
 	@Override
 	public int getEntityLifespan(ItemStack itemStack, World world)
 	{
-		return wrappedItem.getEntityLifespan(itemStack, world);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
+
+		return unwrappedStack.getItem().getEntityLifespan(unwrappedStack, world);
 	}
 
 	@Override
 	public boolean hasCustomEntity(ItemStack stack)
 	{
-		return wrappedItem.hasContainerItem(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().hasContainerItem(unwrappedStack);
 	}
 
 	@Override
 	public Entity createEntity(World world, Entity location, ItemStack itemstack)
 	{
-		return wrappedItem.createEntity(world, location, itemstack);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemstack);
+
+		return unwrappedStack.getItem().createEntity(world, location, unwrappedStack);
 	}
 
 	@Override
 	public boolean onEntityItemUpdate(net.minecraft.entity.item.EntityItem entityItem)
 	{
-		return wrappedItem.onEntityItemUpdate(entityItem);
-	}
+		// TODO: There... MIGHT... be a way...
 
-	@Override
-	public CreativeTabs[] getCreativeTabs()
-	{
-		return wrappedItem.getCreativeTabs();
+		return fallbackItem.onEntityItemUpdate(entityItem);
 	}
 
 	@Override
 	public float getSmeltingExperience(ItemStack item)
 	{
-		return wrappedItem.getSmeltingExperience(item);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(item);
 
-	@Override
-	public net.minecraft.util.WeightedRandomChestContent getChestGenBase(net.minecraftforge.common.ChestGenHooks chest, Random rnd, net.minecraft.util.WeightedRandomChestContent original)
-	{
-		return wrappedItem.getChestGenBase(chest, rnd, original);
-	}
-
-	@Override
-	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player)
-	{
-		return wrappedItem.doesSneakBypassUse(world, pos, player);
+		return unwrappedStack.getItem().getSmeltingExperience(unwrappedStack);
 	}
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
 	{
-		wrappedItem.onArmorTick(world, player, itemStack);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
+
+		unwrappedStack.getItem().onArmorTick(world, player, unwrappedStack);
 	}
 
 	@Override
 	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity)
 	{
-		return wrappedItem.isValidArmor(stack, armorType, entity);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().isValidArmor(unwrappedStack, armorType, entity);
 	}
 
 	@Override
 	public boolean isBookEnchantable(ItemStack stack, ItemStack book)
 	{
-		return wrappedItem.isBookEnchantable(stack, book);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().isBookEnchantable(unwrappedStack, book);
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
 	{
-		return wrappedItem.getArmorTexture(stack, entity, slot, type);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getArmorTexture(unwrappedStack, entity, slot, type);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack)
 	{
-		return wrappedItem.getFontRenderer(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getFontRenderer(unwrappedStack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
 	{
-		return wrappedItem.getArmorModel(entityLiving, itemStack, armorSlot);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
+
+		return unwrappedStack.getItem().getArmorModel(entityLiving, unwrappedStack, armorSlot);
 	}
 
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
 	{
-		return wrappedItem.onEntitySwing(entityLiving, stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().onEntitySwing(entityLiving, unwrappedStack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, net.minecraft.client.gui.ScaledResolution resolution, float partialTicks)
 	{
-		wrappedItem.renderHelmetOverlay(stack, player, resolution, partialTicks);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		unwrappedStack.getItem().renderHelmetOverlay(unwrappedStack, player, resolution, partialTicks);
 	}
 
 	@Override
 	public int getDamage(ItemStack stack)
 	{
-		return wrappedItem.getDamage(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getDamage(unwrappedStack);
 	}
 
 	@Override
 	public int getMetadata(ItemStack stack)
 	{
-		return wrappedItem.getMetadata(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getMetadata(unwrappedStack);
 	}
 
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
 	{
-		return wrappedItem.showDurabilityBar(stack);
+		// TODO: RF Durability bar...
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().showDurabilityBar(unwrappedStack);
 	}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return wrappedItem.getDurabilityForDisplay(stack);
+		// TODO: RF Duraility Bar
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getDurabilityForDisplay(unwrappedStack);
 	}
 
 	@Override
 	public int getMaxDamage(ItemStack stack)
 	{
-		return wrappedItem.getMaxDamage(stack);
+		// TODO: RF Dura Bar
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getMaxDamage(unwrappedStack);
 	}
 
 	@Override
 	public boolean isDamaged(ItemStack stack)
 	{
-		return wrappedItem.isDamaged(stack);
+		// TODO: RF Dura Bar
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().isDamaged(unwrappedStack);
 	}
 
 	@Override
 	public void setDamage(ItemStack stack, int damage)
 	{
-		wrappedItem.setDamage(stack, damage);
+		// TODO: RF Dura Bar
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		unwrappedStack.getItem().setDamage(unwrappedStack, damage);
 	}
 
 	@Override
 	public boolean canHarvestBlock(Block par1Block, ItemStack itemStack)
 	{
-		return wrappedItem.canHarvestBlock(par1Block, itemStack);
+		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
+
+		return unwrappedStack.getItem().canHarvestBlock(par1Block, unwrappedStack);
 	}
 
 	@Override
 	public int getItemStackLimit(ItemStack stack)
 	{
-		return wrappedItem.getItemStackLimit(stack);
-	}
+		// TODO: Pretty sure it should be JUST one on the stacklimit
 
-	@Override
-	public void setHarvestLevel(String toolClass, int level)
-	{
-		wrappedItem.setHarvestLevel(toolClass, level);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getItemStackLimit(unwrappedStack);
 	}
 
 	@Override
 	public java.util.Set<String> getToolClasses(ItemStack stack)
 	{
-		return wrappedItem.getToolClasses(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getToolClasses(unwrappedStack);
 	}
 
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass)
 	{
-		return wrappedItem.getHarvestLevel(stack, toolClass);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getHarvestLevel(unwrappedStack, toolClass);
 	}
 
 	@Override
 	public int getItemEnchantability(ItemStack stack)
 	{
-		return wrappedItem.getItemEnchantability(stack);
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().getItemEnchantability(unwrappedStack);
 	}
 
 	@Override
 	public boolean isBeaconPayment(ItemStack stack)
 	{
-		return wrappedItem.isBeaconPayment(stack);
-	}
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
+		return unwrappedStack.getItem().isBeaconPayment(unwrappedStack);
+	}
 
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
-		return wrappedItem.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
+		// TODO: Fuss with unwrapping and rewrapping
+
+		return fallbackItem.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
 	}
 
 	@Override
 	public net.minecraftforge.common.capabilities.ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt)
 	{
-		return wrappedItem.initCapabilities(stack, nbt);
+		// TODO: Perhaps may explode?
+
+		ItemStack unwrappedStack = unwrapThisItemStack(stack);
+
+		return unwrappedStack.getItem().initCapabilities(unwrappedStack, unwrapThisNBTComp(nbt));
+	}
+
+	@Override
+	public boolean isRepairable()
+	{
+		return fallbackItem.isRepairable();
+	}
+
+	@Override
+	public Item setNoRepair()
+	{
+		return fallbackItem.setNoRepair();
+	}
+
+	@Override
+	public CreativeTabs[] getCreativeTabs()
+	{
+		return fallbackItem.getCreativeTabs();
+	}
+
+	@Override
+	public net.minecraft.util.WeightedRandomChestContent getChestGenBase(net.minecraftforge.common.ChestGenHooks chest, Random rnd, net.minecraft.util.WeightedRandomChestContent original)
+	{
+		return fallbackItem.getChestGenBase(chest, rnd, original);
+	}
+
+	@Override
+	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player)
+	{
+		return fallbackItem.doesSneakBypassUse(world, pos, player);
+	}
+
+	@Override
+	public void setHarvestLevel(String toolClass, int level)
+	{
+		// Bleh!
+
+		fallbackItem.setHarvestLevel(toolClass, level);
 	}
 }

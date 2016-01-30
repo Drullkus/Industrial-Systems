@@ -10,7 +10,7 @@ public class ISItems
 
 	public static void preInit()
 	{
-		pickaxeRF = new ItemRFTool(Items.iron_pickaxe);
+		pickaxeRF = new ItemRFTool(Items.diamond_pickaxe);
 		equipmentRF = new ItemRFKit();
 
 		pickaxeRF.setUnlocalizedName("RFEquippedTool");
