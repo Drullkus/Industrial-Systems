@@ -74,7 +74,7 @@ public class RFToolWrapperRecipe implements IRecipe
 	{
 		NBTTagCompound tagCompound = new NBTTagCompound();
 
-		ItemStack tool = inv.getStackInSlot(5);
+		ItemStack tool = inv.getStackInSlot(4);
 
 		tagCompound = tool.getTagCompound(); //TODO Write a real new itemstack, this is hacky
 

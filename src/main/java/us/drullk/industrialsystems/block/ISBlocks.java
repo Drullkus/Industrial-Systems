@@ -13,7 +13,7 @@ public class ISBlocks
 
 		smartTrashCan.setUnlocalizedName("SmartTrashbin");
 
-		GameRegistry.registerBlock(smartTrashCan);
+		GameRegistry.registerBlock(smartTrashCan, smartTrashCan.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(TileSmartTrashCan.class, "TileSmartTrashbin");
 	}

@@ -34,17 +34,30 @@ public class ItemWrapper extends Item
 
 	public ItemStack unwrapThisItemStack(ItemStack wrappedStack)
 	{
-		ItemStack unwrappedStack = null;
+		ItemStack unwrappedStack = new ItemStack(fallbackItem, 0);
 
 		if(wrappedStack != null && wrappedStack.getItem() instanceof ItemWrapper)
 		{
 			NBTTagCompound tagComp = wrappedStack.getTagCompound();
 
-			unwrappedStack = unloadStackFromWrappedNBT(tagComp);
+			if(tagComp != null)
+			{
+				unwrappedStack = unloadStackFromWrappedNBT(tagComp);
+			}
+			else
+			{
+				IndustrialSystems.logger.info("The TagComp retrieved from wrapper was bad!");
+			}
 		}
-		else
+
+		if(wrappedStack == null)
 		{
-			IndustrialSystems.logger.info("There was a problem with unwrapping ItemStack!");
+			IndustrialSystems.logger.info("ItemStack Wrapper is null!");
+		}
+
+		if(unwrappedStack == null)
+		{
+			IndustrialSystems.logger.info("Unwrapped Itemstack is null!");
 		}
 
 		return unwrappedStack;
@@ -274,7 +287,10 @@ public class ItemWrapper extends Item
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems)
 	{
-		itemIn.getSubItems(itemIn, tab, subItems);
+		// Stack Overflowing!
+		// itemIn.getSubItems(itemIn, tab, subItems);
+
+		fallbackItem.getSubItems(itemIn, tab, subItems);
 	}
 
 	@Override
@@ -735,9 +751,25 @@ public class ItemWrapper extends Item
 	{
 		// TODO: Perhaps may explode?
 
+		/*
+
+		if(stack == null)
+		{
+			return null;
+		}
+
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
+		if(unwrappedStack == null)
+		{
+			return null;
+		}
+
 		return unwrappedStack.getItem().initCapabilities(unwrappedStack, unwrapThisNBTComp(nbt));
+
+		*/
+
+		return null;
 	}
 
 	@Override
