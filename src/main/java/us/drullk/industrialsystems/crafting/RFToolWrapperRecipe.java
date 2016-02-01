@@ -78,11 +78,11 @@ public class RFToolWrapperRecipe implements IRecipe
 		/*if(this.doesItMatch(inv))
 		{*/
 
-		NBTTagCompound tagCompound;
+		NBTTagCompound tagCompound = new NBTTagCompound();
 
 		ItemStack tool = inv.getStackInSlot(4);
 
-		tagCompound = tool.getTagCompound(); //TODO Write a real new itemstack, this is hacky
+		tool.writeToNBT(tagCompound); //TODO Write a real new itemstack, this is hacky
 
 		NBTTagList tagList = new NBTTagList();
 		NBTTagCompound wrappingCompound = new NBTTagCompound();
