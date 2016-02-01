@@ -17,6 +17,11 @@ public class RFToolWrapperRecipe implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn)
 	{
+		return doesItMatch(inv);
+	}
+
+	private boolean doesItMatch(InventoryCrafting inv)
+	{
 		boolean foundItem = false;
 		Item ingredient;
 
@@ -35,35 +40,33 @@ public class RFToolWrapperRecipe implements IRecipe
 
 			if(ingredient instanceof ItemTool)
 			{
-				return true;
+				for(int c = 0; c < inv.getSizeInventory(); c++)
+				{
+					if(c != 4)
+					{
+						if(inv.getStackInSlot(c) != null)
+						{
+							ingredient = inv.getStackInSlot(c).getItem();
+
+							if(ingredient == ISItems.equipmentRF)
+							{
+								if(foundItem)
+								{
+									return false;
+								}
+								else if(!foundItem)
+								{
+									foundItem = true;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		else
 		{
 			return false;
-		}
-
-		for(int c = 0; c < inv.getSizeInventory(); c++)
-		{
-			if(c != 4)
-			{
-				if(inv.getStackInSlot(c) != null)
-				{
-					ingredient = inv.getStackInSlot(c).getItem();
-
-					if(ingredient == ISItems.equipmentRF)
-					{
-						if(foundItem)
-						{
-							return false;
-						}
-						else if(!foundItem)
-						{
-							foundItem = true;
-						}
-					}
-				}
-			}
 		}
 
 		return foundItem;
@@ -72,7 +75,10 @@ public class RFToolWrapperRecipe implements IRecipe
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
-		NBTTagCompound tagCompound = new NBTTagCompound();
+		/*if(this.doesItMatch(inv))
+		{*/
+
+		NBTTagCompound tagCompound;
 
 		ItemStack tool = inv.getStackInSlot(4);
 
@@ -87,6 +93,12 @@ public class RFToolWrapperRecipe implements IRecipe
 		tagCompound.setTag("wrappedStack", tagList);
 
 		return new ItemStack(ISItems.pickaxeRF, 1, 0, tagCompound);
+
+		/*}
+		else
+		{
+			return null;
+		}*/
 	}
 
 	@Override
