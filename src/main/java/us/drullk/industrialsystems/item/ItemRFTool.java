@@ -11,7 +11,7 @@ public class ItemRFTool extends ItemWrapper implements IEnergyContainerItem
 {
 	public ItemRFTool(Item item)
 	{
-		super(item);
+		super(item, "rfTool");
 
 		if(item != null && item instanceof ItemPickaxe)
 		{

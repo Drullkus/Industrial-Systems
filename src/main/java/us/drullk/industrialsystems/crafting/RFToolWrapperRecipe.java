@@ -84,15 +84,16 @@ public class RFToolWrapperRecipe implements IRecipe
 
 		tool.writeToNBT(tagCompound); //TODO Write a real new itemstack, this is hacky
 
-		NBTTagList tagList = new NBTTagList();
 		NBTTagCompound wrappingCompound = new NBTTagCompound();
 
 		tool.writeToNBT(wrappingCompound);
-		tagList.appendTag(wrappingCompound);
 
-		tagCompound.setTag("wrappedStack", tagList);
+		tagCompound.setTag("wrappedStack", wrappingCompound);
 
-		return new ItemStack(ISItems.pickaxeRF, 1, 0, tagCompound);
+
+		ItemStack stack = new ItemStack(ISItems.pickaxeRF, 1);
+		stack.setTagCompound(tagCompound);
+		return stack;
 
 		/*}
 		else

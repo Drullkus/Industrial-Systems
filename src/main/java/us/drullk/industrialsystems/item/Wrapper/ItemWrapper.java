@@ -26,10 +26,13 @@ public class ItemWrapper extends Item
 	@Deprecated
 	public Item fallbackItem;
 
-	public ItemWrapper(Item defaultItem)
+	private String realUnlocalizedName;
+
+	public ItemWrapper(Item defaultItem, String realUnlocalizedName)
 	{
 		fallbackItem = defaultItem;
 		this.setMaxStackSize(1);
+		this.realUnlocalizedName = realUnlocalizedName;
 	}
 
 	public ItemStack unwrapThisItemStack(ItemStack wrappedStack)
@@ -65,9 +68,8 @@ public class ItemWrapper extends Item
 
 	public NBTTagCompound unwrapThisNBTComp(NBTTagCompound tagComp)
 	{
-		NBTTagList tagList = tagComp.getTagList("wrappedStack", 9);
 
-		NBTTagCompound wrappedCompound = tagList.getCompoundTagAt(0);
+		NBTTagCompound wrappedCompound = tagComp.getCompoundTag("wrappedStack");
 
 		if(wrappedCompound == null)
 		{
@@ -89,7 +91,7 @@ public class ItemWrapper extends Item
 		}
 		else
 		{
-			IndustrialSystems.logger.info("Got ItemStack containing Item " + unwrappedStack.getItem().getUnlocalizedName(unwrappedStack) + " from NBT!");
+			//IndustrialSystems.logger.info("Got ItemStack containing Item " + unwrappedStack.getItem().getUnlocalizedName(unwrappedStack) + " from NBT!");
 		}
 
 		return unwrappedStack;
@@ -380,7 +382,7 @@ public class ItemWrapper extends Item
 	@Override
 	public String getUnlocalizedName()
 	{
-		return fallbackItem.getUnlocalizedName();
+		return this.realUnlocalizedName;
 	}
 
 	@Override
