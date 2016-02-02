@@ -30,6 +30,7 @@ public class IndustrialSystems implements Properties
 		ISBlocks.preInit();
 		ISItems.preInit();
 		ISCrafting.preInit();
+		proxy.preInit();
 	}
 
 	@Mod.EventHandler
@@ -38,6 +39,7 @@ public class IndustrialSystems implements Properties
 		ISBlocks.init();
 		ISItems.init();
 		ISCrafting.init();
+		proxy.init();
 	}
 
 	@Mod.EventHandler
@@ -46,5 +48,6 @@ public class IndustrialSystems implements Properties
 		ISBlocks.postInit();
 		ISItems.postInit();
 		ISCrafting.postInit();
+		proxy.postInit();
 	}
 }

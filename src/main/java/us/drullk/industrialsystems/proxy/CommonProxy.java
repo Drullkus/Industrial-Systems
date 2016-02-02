@@ -10,17 +10,17 @@ import us.drullk.industrialsystems.tile.TileSmartTrashCan;
 
 public class CommonProxy implements IGuiHandler
 {
-	public static void preInit()
+	public void preInit()
 	{
 
 	}
 
-	public static void init()
+	public void init()
 	{
 
 	}
 
-	public static void postInit()
+	public void postInit()
 	{
 
 	}

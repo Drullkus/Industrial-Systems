@@ -2,35 +2,51 @@ package us.drullk.industrialsystems.rendering;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.client.model.Attributes;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.ISmartItemModel;
-import org.lwjgl.util.vector.Vector3f;
+import us.drullk.industrialsystems.IndustrialSystems;
 import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.item.ItemRFTool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RFWrappedToolRender implements ISmartItemModel
+public class RFWrappedToolRender implements ISmartItemModel, IFlexibleBakedModel
 {
 
 
-	private static final FaceBakery bakery = new FaceBakery();
 
 	private IBakedModel parentModel;
+
+	private ItemStack lastStack = new ItemStack(ISItems.pickaxeRF);
+
+	private VertexFormat format;
 
 
 	@Override
 	public IBakedModel handleItemState(ItemStack stack)
 	{
-		if (this.parentModel == null && stack.getItem() instanceof ItemRFTool){
-			ItemStack wrappedItem = ISItems.pickaxeRF.unwrapThisItemStack(stack);
-			this.parentModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(wrappedItem);
+		ItemStack wrappedItem = ISItems.pickaxeRF.unwrapThisItemStack(stack);
+		if ((this.parentModel == null || !wrappedItem.getIsItemStackEqual(lastStack)) && stack.getItem() instanceof ItemRFTool){ //todo cache but make sure not fallback
+			if (wrappedItem == null) {
+				this.parentModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(new ItemStack(ISItems.pickaxeRF.fallbackItem));
+			} else {
+				//IndustrialSystems.logger.info("getting model for item " + wrappedItem);
+				this.parentModel = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(wrappedItem);
+			}
+			if (this.parentModel instanceof IFlexibleBakedModel) {
+				this.format = ((IFlexibleBakedModel) this.parentModel).getFormat();
+			} else {
+				this.format = Attributes.DEFAULT_BAKED_FORMAT;
+			}
+			this.lastStack = wrappedItem;
 		}
 		return this;
 	}
@@ -90,5 +106,10 @@ public class RFWrappedToolRender implements ISmartItemModel
 	public ItemCameraTransforms getItemCameraTransforms()
 	{
 		return this.parentModel.getItemCameraTransforms();
+	}
+
+	@Override
+	public VertexFormat getFormat(){
+		return this.format;
 	}
 }
