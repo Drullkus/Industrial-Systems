@@ -25,7 +25,7 @@ public class ClientProxy extends CommonProxy
 	{
 		registerCustomItemModel(ISItems.pickaxeRF, 0, new RFWrappedToolRender());
 
-		registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + ISBlocks.smartTrashCan.getUnlocalizedName(), "inventory"));
+		registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":smartTrashbin" , "inventory"));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ClientProxy extends CommonProxy
 
 	private void registerCustomItemModel(Item item, int meta, IBakedModel model)
 	{
-		ModelResourceLocation rescLocation = new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + item.getUnlocalizedName(), "inventory");
+		ModelResourceLocation rescLocation = new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + item.getUnlocalizedName().substring(5), "inventory");
 		registerModel(item, meta, rescLocation);
 		ModelRegistry.instance.register(rescLocation, model);
 	}

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import us.drullk.industrialsystems.IndustrialSystems;
+import us.drullk.industrialsystems.item.ISItems;
 
 import java.util.List;
 import java.util.Random;
@@ -40,6 +41,9 @@ public class ItemWrapper extends Item
 		NBTTagCompound wrappedCompound = new NBTTagCompound();
 		wrappedStack.writeToNBT(wrappedCompound);
 		NBTTagCompound tagCompound = wrapperStack.getTagCompound();
+		if (tagCompound == null){
+			tagCompound = new NBTTagCompound();
+		}
 		tagCompound.setTag("wrappedStack", wrappedCompound);
 		wrapperStack.setTagCompound(tagCompound);
 		return wrapperStack;
@@ -589,7 +593,11 @@ public class ItemWrapper extends Item
 	{
 		// TODO: There... MIGHT... be a way...
 
-		return fallbackItem.onEntityItemUpdate(entityItem);
+		ItemStack unwrappedStack = unwrapThisItemStack(entityItem.getEntityItem());
+
+		boolean result = unwrappedStack.getItem().onEntityItemUpdate(entityItem);
+		wrapStack(entityItem.getEntityItem(), unwrappedStack);
+		return result;
 	}
 
 	@Override
@@ -606,6 +614,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(itemStack);
 
 		unwrappedStack.getItem().onArmorTick(world, player, unwrappedStack);
+		wrapStack(itemStack, unwrappedStack);
 	}
 
 	@Override
@@ -655,7 +664,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onEntitySwing(entityLiving, unwrappedStack);
+		boolean value = unwrappedStack.getItem().onEntitySwing(entityLiving, unwrappedStack);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -844,6 +855,10 @@ public class ItemWrapper extends Item
 	@Override
 	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player)
 	{
+		if (player.getItemInUse().getItem() instanceof ItemWrapper){
+			ItemStack unwrappedStack = unwrapThisItemStack(player.getItemInUse());
+			return unwrappedStack.getItem().doesSneakBypassUse(world, pos, player);
+		}
 		return fallbackItem.doesSneakBypassUse(world, pos, player);
 	}
 

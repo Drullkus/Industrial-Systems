@@ -11,11 +11,11 @@ public class ISBlocks
 	{
 		smartTrashCan = new BlockSmartTrashCan();
 
-		smartTrashCan.setUnlocalizedName("SmartTrashbin");
+		smartTrashCan.setUnlocalizedName("smartTrashbin");
 
-		GameRegistry.registerBlock(smartTrashCan, smartTrashCan.getUnlocalizedName());
+		GameRegistry.registerBlock(smartTrashCan, "smartTrashbin");
 
-		GameRegistry.registerTileEntity(TileSmartTrashCan.class, "TileSmartTrashbin");
+		GameRegistry.registerTileEntity(TileSmartTrashCan.class, "tileSmartTrashbin");
 	}
 
 	public static void init()
