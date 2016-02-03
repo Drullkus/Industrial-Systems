@@ -1,6 +1,8 @@
 package us.drullk.industrialsystems.proxy;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,17 +23,31 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void init()
 	{
-		ModelResourceLocation toolLoc = new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + ISItems.pickaxeRF.getUnlocalizedName(), "inventory");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(ISItems.pickaxeRF, 0, toolLoc);
-		ModelRegistry.instance.register(toolLoc, new RFWrappedToolRender());
+		registerCustomItemModel(ISItems.pickaxeRF, 0, new RFWrappedToolRender());
 
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-				 .register(Item.getItemFromBlock(ISBlocks.smartTrashCan), 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + ISBlocks.smartTrashCan.getUnlocalizedName(), "inventory"));
+		registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + ISBlocks.smartTrashCan.getUnlocalizedName(), "inventory"));
 	}
 
 	@Override
 	public void postInit()
 	{
 
+	}
+
+	private void registerModel(Block block, int meta, ModelResourceLocation rescLocation)
+	{
+		registerModel(Item.getItemFromBlock(block), meta, rescLocation);
+	}
+
+	private void registerModel(Item item, int meta, ModelResourceLocation rescLocation)
+	{
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, rescLocation);
+	}
+
+	private void registerCustomItemModel(Item item, int meta, IBakedModel model)
+	{
+		ModelResourceLocation rescLocation = new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + item.getUnlocalizedName(), "inventory");
+		registerModel(item, meta, rescLocation);
+		ModelRegistry.instance.register(rescLocation, model);
 	}
 }
