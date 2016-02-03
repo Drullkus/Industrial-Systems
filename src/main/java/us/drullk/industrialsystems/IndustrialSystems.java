@@ -11,10 +11,9 @@ import us.drullk.industrialsystems.block.ISBlocks;
 import us.drullk.industrialsystems.crafting.ISCrafting;
 import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.proxy.CommonProxy;
-import us.drullk.industrialsystems.utils.Properties;
 
-@Mod(modid = Properties.MOD_ID, version = Properties.VERSION, name = Properties.MOD_NAME)
-public class IndustrialSystems implements Properties
+@Mod(modid = ISProperties.MOD_ID, version = ISProperties.VERSION, name = ISProperties.MOD_NAME)
+public class IndustrialSystems implements ISProperties
 {
 	public static final Logger logger = LogManager.getLogger(MOD_NAME);
 

@@ -1,6 +1,6 @@
-package us.drullk.industrialsystems.utils;
+package us.drullk.industrialsystems;
 
-public interface Properties
+interface ISProperties
 {
 	final String MOD_ID = "industrialsystems";
 	final String MOD_NAME = "Industrial Systems";
