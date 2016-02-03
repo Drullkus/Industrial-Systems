@@ -10,18 +10,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IFlexibleBakedModel;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
+import org.apache.commons.lang3.tuple.Pair;
 import us.drullk.industrialsystems.IndustrialSystems;
 import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.item.ItemRFTool;
 
+import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RFWrappedToolRender implements ISmartItemModel, IFlexibleBakedModel
+public class RFWrappedToolRender implements ISmartItemModel, IPerspectiveAwareModel
 {
-
-
 
 	private IBakedModel parentModel;
 
@@ -111,5 +112,13 @@ public class RFWrappedToolRender implements ISmartItemModel, IFlexibleBakedModel
 	@Override
 	public VertexFormat getFormat(){
 		return this.format;
+	}
+
+	@Override
+	public Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType){
+		if (parentModel instanceof IPerspectiveAwareModel){
+			return ((IPerspectiveAwareModel) parentModel).handlePerspective(cameraTransformType);
+		}
+		return Pair.of(this, new Matrix4f());
 	}
 }

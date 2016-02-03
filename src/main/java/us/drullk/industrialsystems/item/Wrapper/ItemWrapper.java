@@ -35,6 +35,15 @@ public class ItemWrapper extends Item
 		this.realUnlocalizedName = realUnlocalizedName;
 	}
 
+	public ItemStack wrapStack(ItemStack wrapperStack, ItemStack wrappedStack){
+		NBTTagCompound wrappedCompound = new NBTTagCompound();
+		wrappedStack.writeToNBT(wrappedCompound);
+		NBTTagCompound tagCompound = wrapperStack.getTagCompound();
+		tagCompound.setTag("wrappedStack", wrappedCompound);
+		wrapperStack.setTagCompound(tagCompound);
+		return wrapperStack;
+	}
+
 	public ItemStack unwrapThisItemStack(ItemStack wrappedStack)
 	{
 		ItemStack unwrappedStack = new ItemStack(fallbackItem, 0);
@@ -113,7 +122,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onItemUse(unwrappedStack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+		boolean value = unwrappedStack.getItem().onItemUse(unwrappedStack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -121,7 +132,7 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(itemStackIn);
 
-		return unwrappedStack.getItem().onItemRightClick(unwrappedStack, worldIn, playerIn);
+		return wrapStack(itemStackIn, unwrappedStack.getItem().onItemRightClick(unwrappedStack, worldIn, playerIn));
 	}
 
 	@Override
@@ -129,7 +140,7 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onItemUseFinish(unwrappedStack, worldIn, playerIn);
+		return wrapStack(stack, unwrappedStack.getItem().onItemUseFinish(unwrappedStack, worldIn, playerIn));
 	}
 
 	@Override
@@ -137,7 +148,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().hitEntity(unwrappedStack, target, attacker);
+		boolean value = unwrappedStack.getItem().hitEntity(unwrappedStack, target, attacker);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -145,7 +158,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onBlockDestroyed(unwrappedStack, worldIn, blockIn, pos, playerIn);
+		boolean value = unwrappedStack.getItem().onBlockDestroyed(unwrappedStack, worldIn, blockIn, pos, playerIn);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -153,7 +168,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().itemInteractionForEntity(unwrappedStack, playerIn, target);
+		boolean value = unwrappedStack.getItem().itemInteractionForEntity(unwrappedStack, playerIn, target);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -187,6 +204,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().onUpdate(unwrappedStack, worldIn, entityIn, itemSlot, isSelected);
+		wrapStack(stack, unwrappedStack);
 	}
 
 	@Override
@@ -195,6 +213,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().onCreated(unwrappedStack, worldIn, playerIn);
+		wrapStack(stack, unwrappedStack);
 	}
 
 	@Override
@@ -202,7 +221,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().getItemUseAction(unwrappedStack);
+		EnumAction value = unwrappedStack.getItem().getItemUseAction(unwrappedStack);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -210,7 +231,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().getMaxItemUseDuration(unwrappedStack);
+		int value = unwrappedStack.getItem().getMaxItemUseDuration(unwrappedStack);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -219,6 +242,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().onPlayerStoppedUsing(unwrappedStack, worldIn, playerIn, timeLeft);
+		wrapStack(stack, unwrappedStack);
 	}
 
 	@Override
@@ -244,6 +268,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().addInformation(unwrappedStack, playerIn, tooltip, advanced);
+		wrapStack(stack, unwrappedStack);
 	}
 
 	@Override
@@ -300,7 +325,11 @@ public class ItemWrapper extends Item
 	{
 		// TODO: Fuss with unwrapping then rewrapping
 
-		return false;
+		ItemStack unwrappedStack = unwrapThisItemStack(toRepair);
+
+		boolean value = unwrappedStack.getItem().getIsRepairable(unwrappedStack, repair);
+		wrapStack(toRepair, unwrappedStack);
+		return value;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -455,7 +484,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onItemUseFirst(unwrappedStack, player, world, pos, side, hitX, hitY, hitZ);
+		boolean value = unwrappedStack.getItem().onItemUseFirst(unwrappedStack, player, world, pos, side, hitX, hitY, hitZ);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -471,7 +502,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(itemstack);
 
-		return unwrappedStack.getItem().onBlockStartBreak(unwrappedStack, pos, player);
+		boolean value = unwrappedStack.getItem().onBlockStartBreak(unwrappedStack, pos, player);
+		wrapStack(itemstack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -480,6 +513,7 @@ public class ItemWrapper extends Item
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().onUsingTick(unwrappedStack, player, count);
+		wrapStack(stack, unwrappedStack);
 	}
 
 	@Override
@@ -487,7 +521,9 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().onLeftClickEntity(unwrappedStack, player, entity);
+		boolean value = unwrappedStack.getItem().onLeftClickEntity(unwrappedStack, player, entity);
+		wrapStack(stack, unwrappedStack);
+		return value;
 	}
 
 	@Override
@@ -530,7 +566,7 @@ public class ItemWrapper extends Item
 	{
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
-		return unwrappedStack.getItem().hasContainerItem(unwrappedStack);
+		return unwrappedStack.getItem().hasCustomEntity(unwrappedStack);
 	}
 
 	@Override
