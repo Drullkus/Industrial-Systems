@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -265,9 +266,15 @@ public class ItemWrapper extends Item
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
 	{
+		if(stack == null)
+		{
+			stack = new ItemStack(fallbackItem);
+		}
+
 		ItemStack unwrappedStack = unwrapThisItemStack(stack);
 
 		unwrappedStack.getItem().addInformation(unwrappedStack, playerIn, tooltip, advanced);
+
 		wrapStack(stack, unwrappedStack);
 	}
 
