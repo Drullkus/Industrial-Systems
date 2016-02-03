@@ -25,13 +25,18 @@ public class ClientProxy extends CommonProxy
 	{
 		registerCustomItemModel(ISItems.pickaxeRF, 0, new RFWrappedToolRender());
 
-		registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + ISBlocks.smartTrashCan.getUnlocalizedName(), "inventory"));
+		registerModel(ISBlocks.smartTrashCan, 0);
 	}
 
 	@Override
 	public void postInit()
 	{
 
+	}
+
+	private void registerModel(Block block, int meta)
+	{
+		registerModel(block, meta, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
 	}
 
 	private void registerModel(Block block, int meta, ModelResourceLocation rescLocation)
