@@ -15,7 +15,9 @@ public class BeatingStick extends Item
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
 		if(attacker.worldObj.isRemote)
+		{
 			return true;
+		}
 
 		if(target instanceof EntityWither)
 		{
@@ -39,7 +41,7 @@ public class BeatingStick extends Item
 
 			target.attackEntityFrom(DamageSource.generic, ((EntityLiving) target).getHealth() * 4f + 10f);
 
-			((EntityLiving)target).setHealth(0f);
+			((EntityLiving) target).setHealth(0f);
 
 			return true;
 		}
