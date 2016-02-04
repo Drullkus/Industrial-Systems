@@ -13,7 +13,7 @@ public class BeatingStick extends Item
 		if(attacker.worldObj.isRemote)
 			return true;
 
-		target.attackEntityFrom(DamageSource.generic, target.getHealth());
+		target.attackEntityFrom(DamageSource.generic, target.getHealth() + 10OT f);
 		return true;
 	}
 }
