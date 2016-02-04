@@ -1,6 +1,7 @@
 package us.drullk.industrialsystems.item;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -13,7 +14,13 @@ public class BeatingStick extends Item
 		if(attacker.worldObj.isRemote)
 			return true;
 
-		target.attackEntityFrom(DamageSource.generic, target.getHealth() + 10f);
+		if(target instanceof EntityWither)
+		{
+			((EntityWither) target).setInvulTime(0);
+		}
+
+		target.attackEntityFrom(DamageSource.generic, target.getHealth() * 4f);
+		target.setHealth(0f);
 		return true;
 	}
 }
