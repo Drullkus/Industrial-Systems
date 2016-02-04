@@ -4,7 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import us.drullk.industrialsystems.IndustrialSystems;
 import us.drullk.industrialsystems.block.ISBlocks;
@@ -26,6 +28,7 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		registerCustomItemModel(ISItems.pickaxeRF, 0, new RFWrappedToolRender());
+		registerModel(ISItems.beatingStick, 0, new ModelResourceLocation("stick", "inventory"));
 
 		//registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":SmartTrashbin", "inventory"));
 

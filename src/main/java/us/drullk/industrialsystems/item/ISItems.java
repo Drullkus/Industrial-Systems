@@ -23,14 +23,12 @@ public class ISItems
 		GameRegistry.registerItem(pickaxeRF, pickaxeRF.getUnlocalizedName());
 		GameRegistry.registerItem(equipmentRF, equipmentRF.getUnlocalizedName());
 		GameRegistry.registerItem(beatingStick, beatingStick.getUnlocalizedName());
-
-		IndustrialSystems.proxy.addModel(equipmentRF);
-		IndustrialSystems.proxy.addModel(beatingStick);
 	}
 
 	public static void init()
 	{
-
+		IndustrialSystems.proxy.makeModel(equipmentRF);
+		//IndustrialSystems.proxy.makeModel(beatingStick);
 	}
 
 	public static void postInit()

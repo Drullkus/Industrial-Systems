@@ -31,22 +31,17 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
-	public void registerSimpleModel()
+	public void makeModel(Block block, String resourceLocation)
 	{
-
+		makeModel(Item.getItemFromBlock(block), resourceLocation);
 	}
 
-	public void addModel(Block block, String resourceLocation)
+	public void makeModel(Item item)
 	{
-		addModel(Item.getItemFromBlock(block), resourceLocation);
+		makeModel(item, item.getUnlocalizedName());
 	}
 
-	public void addModel(Item item)
-	{
-		addModel(item, item.getUnlocalizedName());
-	}
-
-	public void addModel(Item item, String resourceLocation)
+	public void makeModel(Item item, String resourceLocation)
 	{
 		itemModelsToRegister.put(item, resourceLocation);
 	}

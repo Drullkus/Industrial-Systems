@@ -8,9 +8,27 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class BeatingStick extends Item
 {
+	protected void brutalizeEntity(Entity target)
+	{
+		if(target instanceof EntityLiving)
+		{
+			if(target instanceof EntityWither)
+			{
+				((EntityWither) target).setInvulTime(0);
+			}
+
+			target.attackEntityFrom(DamageSource.generic, ((EntityLiving)target).getHealth() * 4f + 10f);
+			((EntityLiving) target).setHealth(0f);
+		}
+	}
+
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
 	{
@@ -19,13 +37,8 @@ public class BeatingStick extends Item
 			return true;
 		}
 
-		if(target instanceof EntityWither)
-		{
-			((EntityWither) target).setInvulTime(0);
-		}
+		brutalizeEntity(target);
 
-		target.attackEntityFrom(DamageSource.generic, target.getHealth() * 4f + 10f);
-		target.setHealth(0f);
 		return true;
 	}
 
@@ -34,18 +47,28 @@ public class BeatingStick extends Item
 	{
 		if(target instanceof EntityLiving && !player.worldObj.isRemote)
 		{
-			if(target instanceof EntityWither)
-			{
-				((EntityWither) target).setInvulTime(0);
-			}
-
-			target.attackEntityFrom(DamageSource.generic, ((EntityLiving) target).getHealth() * 4f + 10f);
-
-			((EntityLiving) target).setHealth(0f);
+			brutalizeEntity(target);
 
 			return true;
 		}
 
 		return false;
+	}
+
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+	{
+		tooltip.add("Brutalize your enemies!");
+		tooltip.add("");
+		tooltip.add("Sharpness MCCCXXXVII"); // Sharpness 1337. RIP
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack stack)
+	{
+		return true;
 	}
 }

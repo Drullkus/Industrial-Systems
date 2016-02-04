@@ -12,17 +12,15 @@ public class ISBlocks
 	{
 		smartTrashCan = new BlockSmartTrashCan();
 
-		smartTrashCan.setUnlocalizedName("smartTrashbin");
+		smartTrashCan.setUnlocalizedName("SmartTrashbin");
 
-		GameRegistry.registerBlock(smartTrashCan, "smartTrashbin");
+		GameRegistry.registerBlock(smartTrashCan, "SmartTrashbin");
 		GameRegistry.registerTileEntity(TileSmartTrashCan.class, "tileSmartTrashbin");
-
-		IndustrialSystems.proxy.addModel(smartTrashCan, "SmartTrashbin");
 	}
 
 	public static void init()
 	{
-
+		IndustrialSystems.proxy.makeModel(smartTrashCan, "SmartTrashbin");
 	}
 
 	public static void postInit()
