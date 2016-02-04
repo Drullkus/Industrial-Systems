@@ -28,7 +28,7 @@ public class ContainerSmartTrashcan extends Container
 		{
 			for (int k = 0; k < 9; ++k)
 			{
-				this.addSlotToContainer(new Slot(trash, k + j * 9, 8 + k * 18, 18 + j * 18));
+				this.addSlotToContainer(new SlotTrashCan(trash, k + j * 9, 8 + k * 18, 18 + j * 18));
 			}
 		}
 
@@ -67,7 +67,7 @@ public class ContainerSmartTrashcan extends Container
 
 		if (slot != null && slot.getHasStack())
 		{
-
+			itemstack = slot.getStack();
 		}
 
 		return itemstack;

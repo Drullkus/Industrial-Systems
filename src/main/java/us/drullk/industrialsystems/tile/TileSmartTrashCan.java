@@ -1,17 +1,22 @@
 package us.drullk.industrialsystems.tile;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
+import us.drullk.industrialsystems.container.ContainerSmartTrashcan;
 
-public class TileSmartTrashCan extends TileEntity implements ITickable, IInventory
+public class TileSmartTrashCan extends TileEntityLockable implements ITickable, IInventory
 {
 	private ItemStack[] itemsForRedemption = new ItemStack[27];
 	private String defaultName = "Smart Trashcan";
@@ -155,13 +160,15 @@ public class TileSmartTrashCan extends TileEntity implements ITickable, IInvento
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
+		int slotToInsert = getFirstMostEmptySlot();
+
 		// Make sure slot exists first
-		if(!isSlotValid(index))
+		if(!isSlotValid(slotToInsert))
 		{
 			return;
 		}
 
-		this.itemsForRedemption[index] = stack;
+		this.itemsForRedemption[slotToInsert] = stack;
 
 		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
 		{
@@ -298,5 +305,36 @@ public class TileSmartTrashCan extends TileEntity implements ITickable, IInvento
 		{
 			compound.setString("CustomName", this.customName);
 		}
+	}
+
+	public int getFirstMostEmptySlot()
+	{
+		int firstEmptyMostSlot = this.getSizeInventory()-1;
+
+		for(int c = this.getSizeInventory()-1; c <= 0; c++)
+		{
+			if(this.getStackInSlot(c) == null)
+			{
+				firstEmptyMostSlot = c;
+			}
+			else
+			{
+				return firstEmptyMostSlot;
+			}
+		}
+
+		return firstEmptyMostSlot;
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
+	{
+		return new ContainerSmartTrashcan(playerInventory, this);
+	}
+
+	@Override
+	public String getGuiID()
+	{
+		return null;
 	}
 }
