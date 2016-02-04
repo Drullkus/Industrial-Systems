@@ -1,7 +1,32 @@
 {
-    "parent": "block/cube_all",
-    "textures":
-    {
-        "all": "industrialsystems:blocks/placeholder"
-    }
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "industrialsystems:blocks/placeholder",
+        "bottom": "industrialsystems:blocks/placeholder",
+        "top": "industrialsystems:blocks/placeholder",
+        "side": "industrialsystems:blocks/placeholder"
+    },
+    "elements": [
+        {   "from": [ 2, 0, 2 ],
+            "to": [ 14, 16, 14 ],
+            "faces": {
+                "down": { "uv": [ 0, 0, 16, 16 ], "texture": "#bottom", "cullface": "down" },
+                "up":   { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "up" }
+            }
+        },
+        {   "from": [ 2, 0, 2 ],
+            "to": [ 14, 16, 14 ],
+            "faces": {
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#side" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#side" }
+            }
+        },
+        {   "from": [ 2, 0, 2 ],
+            "to": [ 14, 16, 14 ],
+            "faces": {
+                "west": { "uv": [ 0, 0, 16, 16 ], "texture": "#side" },
+                "east": { "uv": [ 0, 0, 16, 16 ], "texture": "#side" }
+            }
+        }
+    ]
 }

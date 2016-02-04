@@ -1,5 +1,5 @@
 {
-    "parent":"tutorial:block/SmartTrashbin",
+    "parent": "industrialsystems:block/SmartTrashbin",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

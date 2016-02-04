@@ -12,6 +12,8 @@ import us.drullk.industrialsystems.item.ISItems;
 import us.drullk.industrialsystems.rendering.ModelRegistry;
 import us.drullk.industrialsystems.rendering.RFWrappedToolRender;
 
+import java.util.Map;
+
 public class ClientProxy extends CommonProxy
 {
 	@Override
@@ -25,7 +27,12 @@ public class ClientProxy extends CommonProxy
 	{
 		registerCustomItemModel(ISItems.pickaxeRF, 0, new RFWrappedToolRender());
 
-		registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":smartTrashbin" , "inventory"));
+		//registerModel(ISBlocks.smartTrashCan, 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":SmartTrashbin", "inventory"));
+
+		for(Map.Entry<Item, String> entry : itemModelsToRegister.entrySet())
+		{
+			registerModel(entry.getKey(), 0, new ModelResourceLocation(IndustrialSystems.MOD_ID + ":" + entry.getValue(), "inventory"));
+		}
 	}
 
 	@Override
