@@ -46,10 +46,10 @@ public class BlockSmartTrashCan extends BlockContainer implements ITileEntityPro
 			return true;
 		}
 
-		if (worldIn.isRemote)
-		{
-			return true;
-		}
+//		if (worldIn.isRemote)
+//		{
+//			return true;
+//		}
 
 		playerIn.openGui(IndustrialSystems.instance, 1, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
