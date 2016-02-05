@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "particle": "industrialsystems:blocks/EnderBenchBottom",
+        "down": "industrialsystems:blocks/EnderBenchBottom",
+        "up": "industrialsystems:blocks/EnderBenchTop",
+        "north": "industrialsystems:blocks/EnderBench",
+        "east": "industrialsystems:blocks/EnderBench",
+        "south": "industrialsystems:blocks/EnderBench",
+        "west": "industrialsystems:blocks/EnderBench"
+    }
+}
