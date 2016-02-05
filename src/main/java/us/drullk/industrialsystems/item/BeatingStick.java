@@ -17,7 +17,7 @@ public class BeatingStick extends Item
 {
 	protected void brutalizeEntity(Entity target)
 	{
-		if(target instanceof EntityLiving)
+		if(target instanceof EntityLivingBase)
 		{
 			if(target instanceof EntityWither)
 			{
@@ -25,8 +25,8 @@ public class BeatingStick extends Item
 			}
 
 			// x4 for EnderDragon
-			target.attackEntityFrom(DamageSource.generic, ((EntityLiving)target).getHealth() * 4f + 10f);
-			((EntityLiving) target).setHealth(0f);
+			target.attackEntityFrom(DamageSource.generic, ((EntityLivingBase)target).getHealth() * 4f + 10f);
+			((EntityLivingBase) target).setHealth(0f);
 		}
 	}
 
