@@ -24,6 +24,7 @@ public class BeatingStick extends Item
 				((EntityWither) target).setInvulTime(0);
 			}
 
+			// x4 for EnderDragon
 			target.attackEntityFrom(DamageSource.generic, ((EntityLiving)target).getHealth() * 4f + 10f);
 			((EntityLiving) target).setHealth(0f);
 		}
@@ -60,7 +61,7 @@ public class BeatingStick extends Item
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
 	{
-		tooltip.add("Brutalize your enemies!");
+		tooltip.add("Debug Item — For those wearing Hard Hats!");
 		tooltip.add("");
 		tooltip.add("Sharpness MCCCXXXVII"); // Sharpness 1337. RIP
 	}
